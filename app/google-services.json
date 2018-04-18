@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1076152049569",
+    "firebase_url": "https://kuza-talent.firebaseio.com",
+    "project_id": "kuza-talent",
+    "storage_bucket": "kuza-talent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076152049569:android:95352f22636c6cc1",
+        "android_client_info": {
+          "package_name": "com.dannextech.apps.kuzatalent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076152049569-h59k6nv4s524id1v6k09bm0nmojcgd9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dannextech.apps.kuzatalent",
+            "certificate_hash": "c4a9387b8afcc9b0e42ab975a267fbddda4bd2fd"
+          }
+        },
+        {
+          "client_id": "1076152049569-cn5vq4bu49kj2cu9q837r1jsped7vubn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPe026McSknjR-ChaA0D9AGfOVOfykeWI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076152049569-cn5vq4bu49kj2cu9q837r1jsped7vubn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

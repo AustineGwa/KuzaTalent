@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Kuza Talent</string>
+    <string-array name="categories">
+        <item>Select Category</item>
+        <item>Youth</item>
+        <item>Organization</item>
+    </string-array>
+    <string-array name="talents">
+        <item>Select Talent</item>
+        <item>Poetry</item>
+        <item>Singing</item>
+        <item>Dancing</item>
+        <item>Acting</item>
+        <item>Drawing</item>
+        <item>Painting</item>
+    </string-array>
+</resources>
