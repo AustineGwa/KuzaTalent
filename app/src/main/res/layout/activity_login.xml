@@ -59,7 +59,7 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etPassword"
+                    android:id="@+id/etPasswordLogin"
                     android:drawableLeft="@drawable/password"
                     android:hint="Enter Password" />
             </android.support.design.widget.TextInputLayout>

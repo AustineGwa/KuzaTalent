@@ -28,7 +28,7 @@ public class ViewCall4Talent extends AppCompatActivity {
 
         rvViewCall4Talent = (RecyclerView) findViewById(R.id.rvCall4Talent);
 
-        mReference = FirebaseDatabase.getInstance().getReference().child("orderedMeals");
+        mReference = FirebaseDatabase.getInstance().getReference().child("Call4Talent");
 
         mReference.keepSynced(true);
 
