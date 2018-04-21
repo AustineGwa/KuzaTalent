@@ -1,5 +1,6 @@
 package com.dannextech.apps.kuzatalent;
 
+import android.app.ProgressDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,17 +10,26 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewCall4Talent extends AppCompatActivity {
 
+
+    ProgressDialog progressDialog;
+
+    List<Call4TalentModel> list = new ArrayList<>();
+
     RecyclerView rvViewCall4Talent;
+    RecyclerView.Adapter adapter;
 
-    public DatabaseReference mReference,itemRef;
-
-    //List<MealInfoModel> myList;
-    FirebaseRecyclerAdapter<Call4TalentModel,ViewCall4TalentHolder> firebaseRecyclerAdapter;
+    public DatabaseReference mReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,50 +49,33 @@ public class ViewCall4Talent extends AppCompatActivity {
         rvViewCall4Talent.setHasFixedSize(true);
         rvViewCall4Talent.setLayoutManager(layoutManager);
 
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Call4TalentModel, ViewCall4TalentHolder>(
-                Call4TalentModel.class,
-                R.layout.call_4_talent_sub_details,
-                ViewCall4TalentHolder.class,
-                mReference
-        ) {
+        progressDialog = new ProgressDialog(this);
+
+        progressDialog.setMessage("Loading Data from Firebase Database");
+
+        progressDialog.show();
+
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void populateViewHolder(ViewCall4TalentHolder viewHolder, Call4TalentModel model, int position) {
-                viewHolder.setTalent(model.getTalent());
-                viewHolder.setTalentOrg(model.getOrganization());
-                viewHolder.setTalentDate(model.getDatePosted());
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Snackbar.make(v,"you have clicked me",Snackbar.LENGTH_LONG).show();
-                    }
-                });
+                    Call4TalentModel call4TalentModel = dataSnapshot.getValue(Call4TalentModel.class);
+                    call4TalentModel.setUrl(dataSnapshot.getRef().toString());
+                    list.add(call4TalentModel);
+                }
 
-                rvViewCall4Talent.setAdapter(firebaseRecyclerAdapter);
+                adapter = new Call4TalentAdapter(ViewCall4Talent.this, list);
+
+                rvViewCall4Talent.setAdapter(adapter);
+
+                progressDialog.dismiss();
             }
-        };
-    }
 
-    public static class ViewCall4TalentHolder extends RecyclerView.ViewHolder {
-        View view;
-        public ViewCall4TalentHolder(View itemView) {
-            super(itemView);
-            view = itemView;
-        }
-
-        public void setTalent(String talent){
-            TextView tvTalent = (TextView) view.findViewById(R.id.tvTalentNeed);
-            tvTalent.setText(talent);
-        }
-
-        public void setTalentOrg(String description){
-            TextView tvTalentDesc = (TextView) view.findViewById(R.id.tvOrganizationNeed);
-            tvTalentDesc.setText(description);
-        }
-
-        public void setTalentDate(String date){
-            TextView tvTalentDate = (TextView) view.findViewById(R.id.tvDateTalentNeed);
-            tvTalentDate.setText(date);
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                progressDialog.dismiss();
+            }
+        });
     }
 }

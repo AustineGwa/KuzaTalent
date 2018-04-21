@@ -8,6 +8,15 @@ public class Call4TalentModel {
     String organization;
     String talent;
     String datePosted;
+    String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public Call4TalentModel() {
     }

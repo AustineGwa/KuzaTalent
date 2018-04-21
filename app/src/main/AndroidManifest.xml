@@ -12,23 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login" >
+        <activity android:name=".Login"></activity>
+        <activity android:name=".UploadVideo" />
+        <activity android:name=".SignUp"></activity>
+        <activity android:name=".AddCall4Talent"></activity>
+        <activity android:name=".ViewCall4Talent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UploadVideo" />
-        <activity android:name=".SignUp">
-
-        </activity>
-        <activity android:name=".AddCall4Talent" >
-
-        </activity>
-        <activity android:name=".ViewCall4Talent">
-
-        </activity>
+        <activity android:name=".ViewSpecificCall4Talent"></activity>
     </application>
 
 </manifest>
