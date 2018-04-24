@@ -1,12 +1,17 @@
 package com.dannextech.apps.kuzatalent;
 
-import android.content.SharedPreferences;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +26,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class AddCall4Talent extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class AddCall4TalentFragment extends Fragment {
 
     private static final String TAG = "CALL_4";
 
@@ -32,26 +45,37 @@ public class AddCall4Talent extends AppCompatActivity {
     Spinner spTalent;
     EditText etDesc;
     Button btnSubmit;
+    ProgressDialog progressDialog;
 
     String talent,email,org,web,phone,location;
+
+    public AddCall4TalentFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_call4_talent);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_add_call4_talent, container, false);
 
-        retrieveUserDetails(FirebaseAuth.getInstance().getUid());
+        if (isNetworkAvailable())
+            retrieveUserDetails(FirebaseAuth.getInstance().getUid());
+        else
+            Snackbar.make(view,"Failed to load: Check your internet Connection",Snackbar.LENGTH_SHORT).show();
         Log.e(TAG, "onCreate: id = "+FirebaseAuth.getInstance().getUid() );
-        tvOrg = (TextView) findViewById(R.id.tvOrganization);
-        tvPhone = (TextView) findViewById(R.id.tvPhone);
-        tvEmail = (TextView) findViewById(R.id.tvEmail);
-        tvwebsite = (TextView) findViewById(R.id.tvWebsite);
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
+        tvOrg = (TextView) view.findViewById(R.id.tvOrganization);
+        tvPhone = (TextView) view.findViewById(R.id.tvPhone);
+        tvEmail = (TextView) view.findViewById(R.id.tvEmail);
+        tvwebsite = (TextView) view.findViewById(R.id.tvWebsite);
+        tvLocation = (TextView) view.findViewById(R.id.tvLocation);
 
-        spTalent = (Spinner) findViewById(R.id.spTalent);
+        spTalent = (Spinner) view.findViewById(R.id.spTalent);
 
-        etDesc = (EditText) findViewById(R.id.etDescription);
+        etDesc = (EditText) view.findViewById(R.id.etDescription);
 
-        btnSubmit = (Button) findViewById(R.id.btnSubmitCall4Talent);
+        btnSubmit = (Button) view.findViewById(R.id.btnSubmitCall4Talent);
 
         spTalent.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -68,12 +92,19 @@ public class AddCall4Talent extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveDetails(tvOrg.getText().toString(),tvPhone.getText().toString(),tvEmail.getText().toString(),tvwebsite.getText().toString(),etDesc.getText().toString(),talent,tvLocation.getText().toString());
+                if (isNetworkAvailable())
+                    saveDetails(v,tvOrg.getText().toString(),tvPhone.getText().toString(),tvEmail.getText().toString(),tvwebsite.getText().toString(),etDesc.getText().toString(),talent,tvLocation.getText().toString());
+                else
+                    Snackbar.make(v,"Failed: Check your internet Connection",Snackbar.LENGTH_SHORT).show();
             }
         });
+
+        return view;
     }
 
-    private void saveDetails(String org, String phone, String email, String website, String desc, String talent,String location) {
+
+    private void saveDetails(final View view, String org, String phone, String email, String website, String desc, String talent, String location) {
+        showProgressDialog();
         //creating a reference to the folder users where the details will be saved
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference().child("Call4Talent").push();
@@ -87,20 +118,25 @@ public class AddCall4Talent extends AppCompatActivity {
         DatabaseReference datePostedRef = databaseReference.child("datePosted");
         DatabaseReference locationRef = databaseReference.child("location");
 
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+
         organizationRef.setValue(org);
         phoneRef.setValue(phone);
         emailRef.setValue(email);
         websiteRef.setValue(website);
         talentRef.setValue(talent);
-        datePostedRef.setValue("19-April-2018");
+        datePostedRef.setValue(format.format(date));
         locationRef.setValue(location);
         descriptionRef.setValue(desc, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                Toast.makeText(AddCall4Talent.this,"Saved Successful",Toast.LENGTH_SHORT);
+                hideProgressDialog();
+                Toast.makeText(view.getContext(),"Saved Successful",Toast.LENGTH_SHORT);
             }
         });
     }
+
 
     private void retrieveUserDetails(String uid) {
 
@@ -209,4 +245,21 @@ public class AddCall4Talent extends AppCompatActivity {
         tvEmail.setText(email);
     }
     private void setLocation(String location){ tvLocation.setText(location);}
+
+
+    private void showProgressDialog() {
+        progressDialog = ProgressDialog.show(getContext(),"Saving Call for Talent","Please Wait",true);
+    }
+
+    private void hideProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 }

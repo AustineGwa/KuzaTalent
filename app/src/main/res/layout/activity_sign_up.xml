@@ -6,112 +6,136 @@
     android:layout_height="match_parent"
     tools:context="com.dannextech.apps.kuzatalent.SignUp">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="8dp">
-            <android.support.design.widget.TextInputLayout
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="?android:attr/actionBarSize"
+            android:padding="15dp"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                android:text="User Signup"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="#fff"
+                android:textSize="30dp"/>
 
-                <EditText
+        </android.support.v7.widget.Toolbar>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="8dp">
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etNames"
-                    android:hint="Enter Your Name/Organization Name" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                    android:layout_margin="8dp">
 
-                <EditText
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etNames"
+                        android:hint="Enter Your Name/Organization Name" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etEmailAddress"
-                    android:inputType="textEmailAddress"
-                    android:hint="Enter Email Address" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                    android:layout_margin="8dp">
 
-                <EditText
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etEmailAddress"
+                        android:inputType="textEmailAddress"
+                        android:hint="Enter Email Address" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etPhoneNumber"
-                    android:inputType="phone"
-                    android:hint="Enter Phone Number" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                    android:layout_margin="8dp">
 
-                <EditText
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etPhoneNumber"
+                        android:inputType="phone"
+                        android:hint="Enter Phone Number" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etPassword"
-                    android:inputType="textPassword"
-                    android:hint="Enter Password" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                    android:layout_margin="8dp">
 
-                <EditText
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etPassword"
+                        android:inputType="textPassword"
+                        android:hint="Enter Password" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etPasswordConfirm"
-                    android:inputType="textPassword"
-                    android:hint="Confirm Your password" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_margin="8dp">
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spCategory"
-                android:layout_margin="8dp"/>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etPasswordConfirm"
+                        android:inputType="textPassword"
+                        android:hint="Confirm Your password" />
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
+                <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etWebsite"
-                    android:inputType="textUri"
-                    android:visibility="gone"
-                    android:hint="Enter Website URL" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <EditText
+                    android:id="@+id/spCategory"
+                    android:layout_margin="8dp"/>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/etLocation"
-                    android:inputType="text"
-                    android:visibility="gone"
-                    android:hint="Enter Location" />
-            </android.support.design.widget.TextInputLayout>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnSignUp"
-                android:text="Create Account"
-                android:background="@drawable/submit_btn"/>
-        </LinearLayout>
-    </ScrollView>
+                    android:layout_margin="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etWebsite"
+                        android:inputType="textUri"
+                        android:visibility="gone"
+                        android:hint="Enter Website URL" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etLocation"
+                        android:inputType="text"
+                        android:visibility="gone"
+                        android:hint="Enter Location" />
+                </android.support.design.widget.TextInputLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnSignUp"
+                    android:text="Create Account"
+                    android:background="@drawable/submit_btn"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

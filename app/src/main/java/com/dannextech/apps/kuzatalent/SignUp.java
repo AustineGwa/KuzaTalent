@@ -1,10 +1,18 @@
 package com.dannextech.apps.kuzatalent;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,6 +45,7 @@ public class SignUp extends AppCompatActivity {
     EditText etName, etEmail, etPhone, etPassword, etPasswordConfirm, etWebsite, etLocation;
     Spinner spCategory;
     Button btnSignUp;
+    ProgressDialog progressDialog;
 
     String category = "Youth";
 
@@ -54,6 +63,12 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //remove notification
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_sign_up);
 
         mAuth = FirebaseAuth.getInstance();
@@ -88,6 +103,9 @@ public class SignUp extends AppCompatActivity {
                 if (category.equals("Organization")){
                     etWebsite.setVisibility(View.VISIBLE);
                     etLocation.setVisibility(View.VISIBLE);
+                }else{
+                    etWebsite.setVisibility(View.GONE);
+                    etLocation.setVisibility(View.GONE);
                 }
             }
 
@@ -100,12 +118,16 @@ public class SignUp extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUser(etEmail.getText().toString(),etPassword.getText().toString());
+                if (isNetworkAvailable())
+                    createUser(etEmail.getText().toString(),etPassword.getText().toString());
+                else
+                    Snackbar.make(v,"Failed: Check your internet Connection",Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
     private FirebaseUser createUser(String email, String password){
+        showProgressDialog();
         final FirebaseUser[] user = new FirebaseUser[1];
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -143,11 +165,27 @@ public class SignUp extends AppCompatActivity {
         locationRef.setValue(location, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                hideProgressDialog();
                 Toast.makeText(getApplicationContext(),"User Saved Successfully",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
 
 
+    }
 
-}
+    private void showProgressDialog() {
+        progressDialog = ProgressDialog.show(SignUp.this,"Creating Account","Please Wait",true);
+    }
+
+    private void hideProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

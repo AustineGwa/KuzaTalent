@@ -4,16 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dannextech.apps.kuzatalent.ViewCall4Talent">
-    <LinearLayout
+    tools:context=".SplashScreen"
+    android:background="#000">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/rvCall4Talent">
-
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="150dp"
+            app:srcCompat="@drawable/logoreal" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

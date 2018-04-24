@@ -3,7 +3,10 @@
     package="com.dannextech.apps.kuzatalent">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -12,18 +15,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login"></activity>
-        <activity android:name=".UploadVideo" />
-        <activity android:name=".SignUp"></activity>
-        <activity android:name=".AddCall4Talent"></activity>
-        <activity android:name=".ViewCall4Talent">
+        <activity
+            android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".SignUp"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrganizationDrawer"
+            android:label="@string/title_activity_organization_drawer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".YouthDrawer"
+            android:label="@string/title_activity_youth_drawer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SplashScreen"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewSpecificCall4Talent"></activity>
     </application>
 
 </manifest>
