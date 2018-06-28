@@ -17,6 +17,7 @@
             android:id="@+id/ivVideoIcon"
             android:src="@drawable/ic_ondemand_video_black_24dp"/>
         <LinearLayout
+            android:layout_marginLeft="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

@@ -98,7 +98,7 @@ public class SignUp extends AppCompatActivity {
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = spCategory.getItemAtPosition(position).toString();
+                category = spCategory.getItemAtPosition(position).toString().trim();
 
                 if (category.equals("Organization")){
                     etWebsite.setVisibility(View.VISIBLE);
@@ -118,15 +118,58 @@ public class SignUp extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkAvailable())
-                    createUser(etEmail.getText().toString(),etPassword.getText().toString());
-                else
+                if (isNetworkAvailable()) {
+                    if (checkPassword(etPassword.getText().toString().trim(),etPasswordConfirm.getText().toString().trim()) && validateEntries(etEmail.getText().toString().trim(),etPassword.getText().toString().trim(),etName.getText().toString().trim(), etPhone.getText().toString().trim(), category, etWebsite.getText().toString().trim(), etLocation.getText().toString().trim())){
+                        createUser(etEmail.getText().toString().trim(),etPassword.getText().toString().trim());
+                    }
+                }else
                     Snackbar.make(v,"Failed: Check your internet Connection",Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
-    private FirebaseUser createUser(String email, String password){
+    private Boolean validateEntries(String email, String password, String name, String phone, String category, String website, String location) {
+        if (email.isEmpty()){
+            etEmail.setError("required");
+            return false;
+        }else if (password.isEmpty()){
+            etPassword.setError("required");
+            return false;
+        }else if (name.isEmpty()){
+            etName.setError("required");
+            return false;
+        }else if (phone.isEmpty()){
+            etPhone.setError("required");
+            return false;
+        }else if (category.equals("Organization")){
+            if (website.isEmpty()){
+                etWebsite.setError("required");
+                return false;
+            }else if (location.isEmpty()){
+                etLocation.setError("required");
+                return false;
+            }
+        }
+        Log.e(TAG, "validateEntries: all valid");
+        return true;
+    }
+
+    private boolean checkPassword(String pass, String passconf) {
+        if (!pass.equals(passconf)){
+            etPasswordConfirm.setError("Do not match with Password");
+            Toast.makeText(getApplicationContext(),"Password do not match the Confirm Password",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (pass.length()<6){
+            etPassword.setError("Password should be more than 6 characters");
+            Toast.makeText(getApplicationContext(),"Password should be more than 6 characters",Toast.LENGTH_SHORT).show();
+            return false;
+        }else {
+            Log.e(TAG, "checkPassword: password is authentic");
+            return true;
+        }
+    }
+
+    private void createUser(String email, String password){
         showProgressDialog();
         final FirebaseUser[] user = new FirebaseUser[1];
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
@@ -138,11 +181,12 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_SHORT).show();
                     uploadUserDetails(user[0],etName.getText().toString(), etPhone.getText().toString(), category, etWebsite.getText().toString(), etLocation.getText().toString());
                 }else {
+                    hideProgressDialog();
+                    Toast.makeText(getApplicationContext(),"User Creation Failed"+task.getException(),Toast.LENGTH_LONG).show();
                     Log.e(TAG, "onComplete: user creation failed",task.getException());
                 }
             }
         });
-        return user[0];
     }
     private void uploadUserDetails(FirebaseUser user, String name, String phone, String category, String website, String location) {
         //creating a reference to the folder users where the details will be saved

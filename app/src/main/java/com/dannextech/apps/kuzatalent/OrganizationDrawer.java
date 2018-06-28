@@ -110,8 +110,6 @@ public class OrganizationDrawer extends AppCompatActivity
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
             fragmentTransaction.replace(R.id.flOrganizationFragment,fragment);
             fragmentTransaction.commitAllowingStateLoss();
-        } else if (id == R.id.nav_view_mine) {
-
         } else if (id == R.id.nav_videos) {
             toolbar.setTitle("Uploaded Videos");
             Fragment fragment = new ViewVideoUploadsFragment();
@@ -127,7 +125,7 @@ public class OrganizationDrawer extends AppCompatActivity
             fragmentTransaction.replace(R.id.flOrganizationFragment,fragment);
             fragmentTransaction.commitAllowingStateLoss();
         } else if (id == R.id.nav_log_out) {
-            startActivity(new Intent(this,Login.class));
+            startActivity(new Intent(getApplicationContext(),Login.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

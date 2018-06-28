@@ -85,6 +85,8 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"success",Toast.LENGTH_SHORT).show();
                                 retrieveUserDetails(user.getUid());
                             }else {
+                                hideProgressDialog();
+                                Toast.makeText(getApplicationContext(),"Authentication failed: "+task.getException(),Toast.LENGTH_LONG).show();
                                 Log.e(TAG, "onComplete: user creation failed",task.getException());
                             }
                         }

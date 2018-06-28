@@ -191,7 +191,11 @@
                     android:id="@+id/ivLocation"
                     android:src="@drawable/ic_place_black_24dp"/>
             </LinearLayout>
-
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply"
+                android:id="@+id/btnApply"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

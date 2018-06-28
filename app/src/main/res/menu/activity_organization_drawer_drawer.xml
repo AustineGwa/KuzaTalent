@@ -12,10 +12,7 @@
             android:id="@+id/nav_view_all"
             android:icon="@drawable/ic_remove_red_eye_black_24dp"
             android:title="View all Call for Talent" />
-        <item
-            android:id="@+id/nav_view_mine"
-            android:icon="@drawable/ic_remove_red_eye_black_24dp"
-            android:title="View My Call for Talent" />
+
         <item
             android:id="@+id/nav_videos"
             android:icon="@drawable/ic_ondemand_video_black_24dp"

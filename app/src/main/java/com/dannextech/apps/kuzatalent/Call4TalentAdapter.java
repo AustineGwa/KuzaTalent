@@ -15,9 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +34,8 @@ public class Call4TalentAdapter extends RecyclerView.Adapter<Call4TalentAdapter.
 
     Context context;
     List<Call4TalentModel> call4Talents;
+
+    ColorGenerator generator = ColorGenerator.MATERIAL;
 
     public Call4TalentAdapter(Context context, List<Call4TalentModel> TempList) {
 
@@ -58,6 +63,12 @@ public class Call4TalentAdapter extends RecyclerView.Adapter<Call4TalentAdapter.
         holder.tvTalent.setText(call4TalentModel.getTalent());
 
         holder.tvDate.setText(call4TalentModel.getDatePosted());
+
+        //Get the first letter of list item
+        String letter = String.valueOf(holder.tvTalent.getText().charAt(0));
+        //Create a new TextDrawable for our image's background
+        final TextDrawable drawable = TextDrawable.builder().buildRound(letter,generator.getRandomColor());
+        holder.ivlog.setImageDrawable(drawable);
 
         holder.cvCall4Talent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +146,7 @@ public class Call4TalentAdapter extends RecyclerView.Adapter<Call4TalentAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrg,tvTalent,tvDate,tvLocation;
         CardView cvCall4Talent;
+        ImageView ivlog;
         public ViewHolder(View itemView) {
             super(itemView);
             tvOrg = (TextView) itemView.findViewById(R.id.tvOrganizationNeed);
@@ -143,6 +155,7 @@ public class Call4TalentAdapter extends RecyclerView.Adapter<Call4TalentAdapter.
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocationTalentNeed);
 
             cvCall4Talent = (CardView) itemView.findViewById(R.id.cvCall4Talent);
+            ivlog = (ImageView) itemView.findViewById(R.id.ivLog);
         }
     }
 }

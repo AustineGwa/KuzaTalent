@@ -9,16 +9,31 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
 class UploadVideoAdapter extends RecyclerView.Adapter<UploadVideoAdapter.ViewHolder> {
     Context context;
     List<UploadVideoModel> videos;
+
+    FirebaseDatabase databases;
+    DatabaseReference database,databaseRef;
+
+    String cat;
+
     public UploadVideoAdapter(Context context, List<UploadVideoModel> list) {
         this.context = context;
         this.videos = list;
@@ -50,12 +65,7 @@ class UploadVideoAdapter extends RecyclerView.Adapter<UploadVideoAdapter.ViewHol
 
                 editor.apply();
 
-                Fragment fragment = new ViewSpecificVideoFragment();
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.flOrganizationFragment,fragment);
-                fragmentTransaction.commitAllowingStateLoss();
+                retrieveVideos(FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
         });
     }
@@ -76,4 +86,56 @@ class UploadVideoAdapter extends RecyclerView.Adapter<UploadVideoAdapter.ViewHol
             tvTitle = (TextView) itemView.findViewById(R.id.tvVideoTitle);
         }
     }
+
+
+    private void retrieveVideos(String uid) {
+        final String[] category = new String[1];
+        //creating a reference to the folder users where the details will be saved
+        databases = FirebaseDatabase.getInstance();
+        databaseRef = databases.getReference().child("Users/"+uid);
+
+        DatabaseReference categoryRef = databaseRef.getRef().child("Category");
+
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("Dannex", "onDataChange: details are "+dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                cat = dataSnapshot.getValue().toString();
+
+                Log.e("Dannex", "onDataChange: "+ category);
+                if (cat.equals("Organization")){
+                    Fragment fragment = new ViewSpecificVideoFragment();
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+                    fragmentTransaction.replace(R.id.flOrganizationFragment,fragment);
+                    fragmentTransaction.commitAllowingStateLoss();
+                }else {
+                    Fragment fragment = new ViewSpecificVideoFragment();
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+                    fragmentTransaction.replace(R.id.flYouthFragment,fragment);
+                    fragmentTransaction.commitAllowingStateLoss();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(context,"Something went wrong. Please try again",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

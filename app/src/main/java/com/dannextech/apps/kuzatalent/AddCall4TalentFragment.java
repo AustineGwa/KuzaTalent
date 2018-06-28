@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,6 +134,11 @@ public class AddCall4TalentFragment extends Fragment {
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 hideProgressDialog();
                 Toast.makeText(view.getContext(),"Saved Successful",Toast.LENGTH_SHORT);
+                Fragment fragment = new ViewCall4TalentFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.flOrganizationFragment,fragment);
+                fragmentTransaction.commitAllowingStateLoss();
             }
         });
     }

@@ -3,9 +3,11 @@ package com.dannextech.apps.kuzatalent;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +45,8 @@ public class ViewSpecificVideoFragment extends Fragment {
 
     private static final String TAG = "VIEW_SPECIFIC_VIDEO";
 
-    TextView tvTalent, tvTitle, tvDesc, tvSender;
-
+    TextView tvTalent, tvTitle, tvDesc, tvSender,tvEmail,tvPhone;
+    ImageView ivEmail,ivPhone;
     Button btnDownload;
     ProgressDialog progressDialog;
 
@@ -67,6 +70,11 @@ public class ViewSpecificVideoFragment extends Fragment {
         tvTitle = (TextView) view.findViewById(R.id.tvVidTitle);
         tvSender = (TextView) view.findViewById(R.id.tvVidSender);
         tvTalent = (TextView) view.findViewById(R.id.tvVidTalent);
+        tvPhone = (TextView) view.findViewById(R.id.tvVidSenderPhone);
+        tvEmail = (TextView) view.findViewById(R.id.tvVidSenderMail);
+
+        ivEmail = (ImageView) view.findViewById(R.id.ivSenderEmail);
+        ivPhone = (ImageView) view.findViewById(R.id.ivSenderPhone);
 
         btnDownload = (Button) view.findViewById(R.id.btnVidDownload);
 
@@ -109,6 +117,30 @@ public class ViewSpecificVideoFragment extends Fragment {
             }
         });
 
+        ivEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_EMAIL,new String[]{tvEmail.getText().toString()});
+                intent.putExtra(Intent.EXTRA_SUBJECT,"INTERESTED IN YOUR TALENT");
+                intent.putExtra(Intent.EXTRA_TEXT,"I have just watched your video and I have loved your talent. Would like to see more of these...");
+                try{
+                    startActivity(Intent.createChooser(intent,"Send mail..."));
+                }catch (android.content.ActivityNotFoundException exception){
+                    Snackbar.make(v,"There is no email clients installed",Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ivPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri number = Uri.parse("tel:"+tvPhone.getText().toString());
+                startActivity(new Intent(Intent.ACTION_DIAL,number));
+            }
+        });
+
         return view;
     }
 
@@ -144,6 +176,8 @@ public class ViewSpecificVideoFragment extends Fragment {
         tvTitle.setText(specificVideo.getTitle());
         tvDesc.setText(specificVideo.getDescription());
         tvTalent.setText(specificVideo.getTalent());
+        tvEmail.setText(specificVideo.getEmail());
+        tvPhone.setText(specificVideo.getPhone());
     }
 
 

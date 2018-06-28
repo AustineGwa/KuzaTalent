@@ -114,9 +114,15 @@ public class YouthDrawer extends AppCompatActivity
             fragmentTransaction.replace(R.id.flYouthFragment,fragment);
             fragmentTransaction.commitAllowingStateLoss();
         } else if (id == R.id.nav_videos_mine) {
+            toolbar.setTitle("Uploaded Videos");
+            Fragment fragment = new ViewVideoUploadsFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.flYouthFragment,fragment);
+            fragmentTransaction.commitAllowingStateLoss();
 
         } else if (id == R.id.nav_log_out) {
-            startActivity(new Intent(this,Login.class));
+            startActivity(new Intent(getApplicationContext(),Login.class));
         } else if (id == R.id.nav_youth_profile) {
             toolbar.setTitle("My Profile");
             Fragment fragment = new ProfileFragment();

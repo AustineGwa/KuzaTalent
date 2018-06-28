@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MediaController;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -32,9 +33,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,6 +68,7 @@ public class UploadVideoFragment extends Fragment {
     VideoView videoView;
     EditText etTitle,etDesc;
     Spinner spTalent;
+    TextView tvFile;
     ProgressDialog progressDialog;
 
     public UploadVideoFragment() {
@@ -90,6 +94,8 @@ public class UploadVideoFragment extends Fragment {
 
         etDesc = (EditText) view.findViewById(R.id.etVidDescription);
         etTitle = (EditText) view.findViewById(R.id.etVidTitle);
+
+        tvFile = (TextView) view.findViewById(R.id.tvVidName);
 
         spTalent = (Spinner) view.findViewById(R.id.spVidTalent);
 
@@ -170,6 +176,7 @@ public class UploadVideoFragment extends Fragment {
             }
             Log.e(TAG, "onActivityResult: "+filePath);
             if (filePath != null){
+                tvFile.setText(data.getData().getLastPathSegment().toString());
                 playVideo(filePath);
             }else{
                 Toast.makeText(getContext(),"Can't open video please select again",Toast.LENGTH_SHORT).show();
@@ -214,12 +221,65 @@ public class UploadVideoFragment extends Fragment {
         DatabaseReference descRef = databaseReference.child("description");
         DatabaseReference urlRef = databaseReference.child("path");
         DatabaseReference senderRef = databaseReference.child("sender");
+        DatabaseReference senderMailRef = databaseReference.child("email");
+        DatabaseReference senderPhoneRef = databaseReference.child("phone");
 
+        //getting the user details
+        DatabaseReference userDatabaseReference = database.getReference().child("Users/"+user.getUid());
+        DatabaseReference orgRef = userDatabaseReference.getRef().child("Name");
+        DatabaseReference phoneRef = userDatabaseReference.getRef().child("Phone");
+        DatabaseReference emailRef = userDatabaseReference.getRef().child("Email");
+
+        final String[] name = new String[1];
+        final String[] phones = new String[1];
+        final String[] email = new String[1];
+
+        orgRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                name[0] = dataSnapshot.getValue().toString();
+                Toast.makeText(getContext(),"name = "+name[0],Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        phoneRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                phones[0] = dataSnapshot.getValue().toString();
+                Toast.makeText(getContext(),"phone = "+phones[0],Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        emailRef.setValue(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                email[0] = dataSnapshot.getValue().toString();
+                Toast.makeText(getContext(),"email = "+email[0],Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        senderPhoneRef.setValue(phones[0]);
+        senderMailRef.setValue(email[0]);
+        senderRef.setValue(name[0]);
         titleRef.setValue(title);
         descRef.setValue(desc);
         urlRef.setValue(url.toString());
-        talentRef.setValue(talent);
-        senderRef.setValue(user.getEmail().toString(), new DatabaseReference.CompletionListener() {
+        talentRef.setValue(talent, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 hideProgressDialog();
@@ -234,6 +294,7 @@ public class UploadVideoFragment extends Fragment {
             }
         });
     }
+
 
     private void showProgressDialog() {
         progressDialog = ProgressDialog.show(getContext(),"Uploading Video","Please Wait",true);
